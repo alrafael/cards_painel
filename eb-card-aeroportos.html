@@ -6,21 +6,18 @@
 <title>Card Aeroportos</title>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
+ 
   html, body {
     width: 100%;
     height: 100%;
     background: transparent;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     font-family: 'Avenir Next', 'Avenir', 'Century Gothic', 'Trebuchet MS', sans-serif;
   }
-
+ 
   .card {
     position: relative;
-    width: 320px;
-    height: 200px;
+    width: 100%;
+    height: 100vh;
     border-radius: 20px;
     overflow: hidden;
     padding: 28px 28px 24px;
@@ -30,39 +27,36 @@
     flex-direction: column;
     justify-content: flex-start;
     cursor: default;
-    transition: transform 0.3s ease, border-color 0.3s ease;
+    transition: border-color 0.3s ease;
   }
-
-  .card:hover {
-    transform: translateY(-4px) scale(1.01);
-    border-color: rgba(255,255,255,0.14);
-  }
-
+ 
+  .card:hover { border-color: rgba(255,255,255,0.14); }
+ 
   .blob {
     position: absolute;
     border-radius: 50%;
     pointer-events: none;
     z-index: 0;
   }
-
+ 
   .blob-main {
-    bottom: -45px;
-    right: -35px;
-    width: 255px;
-    height: 215px;
+    bottom: -20%;
+    right: -10%;
+    width: 68%;
+    height: 78%;
     background: radial-gradient(ellipse, rgba(94,62,144,0.82) 0%, rgba(94,62,144,0.28) 42%, transparent 70%);
     filter: blur(30px);
   }
-
+ 
   .blob-accent {
-    top: 2px;
-    right: 62px;
-    width: 130px;
-    height: 100px;
+    top: 2%;
+    right: 20%;
+    width: 38%;
+    height: 46%;
     background: radial-gradient(ellipse, rgba(160,110,240,0.30) 0%, transparent 70%);
     filter: blur(20px);
   }
-
+ 
   .star {
     position: absolute;
     border-radius: 50%;
@@ -70,29 +64,25 @@
     z-index: 1;
     animation: twinkle 3s ease-in-out infinite;
   }
-
+ 
   @keyframes twinkle {
     0%, 100% { opacity: 0.3; transform: scale(1); }
     50%       { opacity: 1;   transform: scale(1.5); }
   }
-
-  .card-content {
-    position: relative;
-    z-index: 2;
-  }
-
+ 
+  .card-content { position: relative; z-index: 2; }
+ 
   .card-title {
     font-family: 'Avenir Next', 'Avenir', 'Century Gothic', 'Trebuchet MS', sans-serif;
-    font-size: 32px;
+    font-size: 20px;
     font-weight: 700;
     color: #ffffff;
-    letter-spacing: -0.3px;
-    line-height: 1.1;
+    letter-spacing: -0.2px;
+    line-height: 1.2;
   }
 </style>
 </head>
 <body>
-
 <div class="card">
   <div class="blob blob-main"></div>
   <div class="blob blob-accent"></div>
@@ -103,6 +93,5 @@
     <h1 class="card-title">Aeroportos</h1>
   </div>
 </div>
-
 </body>
 </html>
