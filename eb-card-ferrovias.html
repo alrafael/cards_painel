@@ -6,21 +6,18 @@
 <title>Card Ferrovias</title>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
+ 
   html, body {
     width: 100%;
     height: 100%;
     background: transparent;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     font-family: 'Avenir Next', 'Avenir', 'Century Gothic', 'Trebuchet MS', sans-serif;
   }
-
+ 
   .card {
     position: relative;
-    width: 320px;
-    height: 200px;
+    width: 100%;
+    height: 100vh;
     border-radius: 20px;
     overflow: hidden;
     padding: 28px 28px 24px;
@@ -30,39 +27,36 @@
     flex-direction: column;
     justify-content: flex-start;
     cursor: default;
-    transition: transform 0.3s ease, border-color 0.3s ease;
+    transition: border-color 0.3s ease;
   }
-
-  .card:hover {
-    transform: translateY(-4px) scale(1.01);
-    border-color: rgba(255,255,255,0.14);
-  }
-
+ 
+  .card:hover { border-color: rgba(255,255,255,0.14); }
+ 
   .blob {
     position: absolute;
     border-radius: 50%;
     pointer-events: none;
     z-index: 0;
   }
-
+ 
   .blob-main {
-    bottom: -40px;
-    right: -28px;
-    width: 235px;
-    height: 200px;
+    bottom: -20%;
+    right: -10%;
+    width: 64%;
+    height: 74%;
     background: radial-gradient(ellipse, rgba(138,74,24,0.88) 0%, rgba(138,74,24,0.26) 42%, transparent 70%);
     filter: blur(27px);
   }
-
+ 
   .blob-accent {
-    top: 2px;
-    right: 60px;
-    width: 120px;
-    height: 92px;
+    top: 2%;
+    right: 20%;
+    width: 36%;
+    height: 44%;
     background: radial-gradient(ellipse, rgba(220,120,40,0.28) 0%, transparent 70%);
     filter: blur(17px);
   }
-
+ 
   .star {
     position: absolute;
     border-radius: 50%;
@@ -70,29 +64,25 @@
     z-index: 1;
     animation: twinkle 3s ease-in-out infinite;
   }
-
+ 
   @keyframes twinkle {
     0%, 100% { opacity: 0.3; transform: scale(1); }
     50%       { opacity: 1;   transform: scale(1.5); }
   }
-
-  .card-content {
-    position: relative;
-    z-index: 2;
-  }
-
+ 
+  .card-content { position: relative; z-index: 2; }
+ 
   .card-title {
     font-family: 'Avenir Next', 'Avenir', 'Century Gothic', 'Trebuchet MS', sans-serif;
-    font-size: 32px;
+    font-size: 20px;
     font-weight: 700;
     color: #ffffff;
-    letter-spacing: -0.3px;
-    line-height: 1.1;
+    letter-spacing: -0.2px;
+    line-height: 1.2;
   }
 </style>
 </head>
 <body>
-
 <div class="card">
   <div class="blob blob-main"></div>
   <div class="blob blob-accent"></div>
@@ -103,6 +93,5 @@
     <h1 class="card-title">Ferrovias</h1>
   </div>
 </div>
-
 </body>
 </html>
