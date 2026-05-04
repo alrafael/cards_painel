@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Card Portos</title>
+<title>Card TERMINAIS PORTUÁRIOS</title>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -11,16 +11,13 @@
     width: 100%;
     height: 100%;
     background: transparent;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     font-family: 'Avenir Next', 'Avenir', 'Century Gothic', 'Trebuchet MS', sans-serif;
   }
 
   .card {
     position: relative;
-    width: 320px;
-    height: 200px;
+    width: 100%;
+    height: 100vh;
     border-radius: 20px;
     overflow: hidden;
     padding: 28px 28px 24px;
@@ -30,13 +27,10 @@
     flex-direction: column;
     justify-content: flex-start;
     cursor: default;
-    transition: transform 0.3s ease, border-color 0.3s ease;
+    transition: border-color 0.3s ease;
   }
 
-  .card:hover {
-    transform: translateY(-4px) scale(1.01);
-    border-color: rgba(255,255,255,0.14);
-  }
+  .card:hover { border-color: rgba(255,255,255,0.14); }
 
   .blob {
     position: absolute;
@@ -46,19 +40,19 @@
   }
 
   .blob-main {
-    bottom: -40px;
-    right: -28px;
-    width: 245px;
-    height: 205px;
+    bottom: -20%;
+    right: -10%;
+    width: 66%;
+    height: 76%;
     background: radial-gradient(ellipse, rgba(0,104,176,0.82) 0%, rgba(0,104,176,0.26) 42%, transparent 70%);
     filter: blur(28px);
   }
 
   .blob-accent {
-    top: 0px;
-    right: 65px;
-    width: 125px;
-    height: 100px;
+    top: 2%;
+    right: 21%;
+    width: 36%;
+    height: 46%;
     background: radial-gradient(ellipse, rgba(40,160,255,0.28) 0%, transparent 70%);
     filter: blur(18px);
   }
@@ -76,23 +70,19 @@
     50%       { opacity: 1;   transform: scale(1.5); }
   }
 
-  .card-content {
-    position: relative;
-    z-index: 2;
-  }
+  .card-content { position: relative; z-index: 2; }
 
   .card-title {
     font-family: 'Avenir Next', 'Avenir', 'Century Gothic', 'Trebuchet MS', sans-serif;
-    font-size: 32px;
+    font-size: 20px;
     font-weight: 700;
     color: #ffffff;
-    letter-spacing: -0.3px;
-    line-height: 1.1;
+    letter-spacing: -0.2px;
+    line-height: 1.2;
   }
 </style>
 </head>
 <body>
-
 <div class="card">
   <div class="blob blob-main"></div>
   <div class="blob blob-accent"></div>
@@ -103,6 +93,5 @@
     <h1 class="card-title">Portos</h1>
   </div>
 </div>
-
 </body>
 </html>
