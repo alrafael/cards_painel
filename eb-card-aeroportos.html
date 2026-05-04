@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Card Aeroportos</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Avenir Next', 'Avenir', 'Century Gothic', 'Trebuchet MS', sans-serif;
+  }
+
+  .card {
+    position: relative;
+    width: 320px;
+    height: 200px;
+    border-radius: 20px;
+    overflow: hidden;
+    padding: 28px 28px 24px;
+    border: 1px solid rgba(255,255,255,0.07);
+    background: #0b0912;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    cursor: default;
+    transition: transform 0.3s ease, border-color 0.3s ease;
+  }
+
+  .card:hover {
+    transform: translateY(-4px) scale(1.01);
+    border-color: rgba(255,255,255,0.14);
+  }
+
+  .blob {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .blob-main {
+    bottom: -45px;
+    right: -35px;
+    width: 255px;
+    height: 215px;
+    background: radial-gradient(ellipse, rgba(94,62,144,0.82) 0%, rgba(94,62,144,0.28) 42%, transparent 70%);
+    filter: blur(30px);
+  }
+
+  .blob-accent {
+    top: 2px;
+    right: 62px;
+    width: 130px;
+    height: 100px;
+    background: radial-gradient(ellipse, rgba(160,110,240,0.30) 0%, transparent 70%);
+    filter: blur(20px);
+  }
+
+  .star {
+    position: absolute;
+    border-radius: 50%;
+    background: #fff;
+    z-index: 1;
+    animation: twinkle 3s ease-in-out infinite;
+  }
+
+  @keyframes twinkle {
+    0%, 100% { opacity: 0.3; transform: scale(1); }
+    50%       { opacity: 1;   transform: scale(1.5); }
+  }
+
+  .card-content {
+    position: relative;
+    z-index: 2;
+  }
+
+  .card-title {
+    font-family: 'Avenir Next', 'Avenir', 'Century Gothic', 'Trebuchet MS', sans-serif;
+    font-size: 32px;
+    font-weight: 700;
+    color: #ffffff;
+    letter-spacing: -0.3px;
+    line-height: 1.1;
+  }
+</style>
+</head>
+<body>
+
+<div class="card">
+  <div class="blob blob-main"></div>
+  <div class="blob blob-accent"></div>
+  <div class="star" style="width:3px;height:3px;top:18px;right:50px;animation-delay:0.3s;"></div>
+  <div class="star" style="width:2px;height:2px;top:46px;right:92px;animation-delay:1.4s;"></div>
+  <div class="star" style="width:2px;height:2px;top:30px;right:130px;animation-delay:0.7s;"></div>
+  <div class="card-content">
+    <h1 class="card-title">Aeroportos</h1>
+  </div>
+</div>
+
+</body>
+</html>

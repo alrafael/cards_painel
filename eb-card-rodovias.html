@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Card Rodovias</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Avenir Next', 'Avenir', 'Century Gothic', 'Trebuchet MS', sans-serif;
+  }
+
+  .card {
+    position: relative;
+    width: 320px;
+    height: 200px;
+    border-radius: 20px;
+    overflow: hidden;
+    padding: 28px 28px 24px;
+    border: 1px solid rgba(255,255,255,0.07);
+    background: #0c1308;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    cursor: default;
+    transition: transform 0.3s ease, border-color 0.3s ease;
+  }
+
+  .card:hover {
+    transform: translateY(-4px) scale(1.01);
+    border-color: rgba(255,255,255,0.14);
+  }
+
+  /* ---- blobs de aurora como divs reais ---- */
+  .blob {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .blob-main {
+    bottom: -40px;
+    right: -30px;
+    width: 240px;
+    height: 200px;
+    background: radial-gradient(ellipse, rgba(85,138,40,0.72) 0%, rgba(85,138,40,0.24) 42%, transparent 70%);
+    filter: blur(28px);
+  }
+
+  .blob-accent {
+    top: 8px;
+    right: 72px;
+    width: 120px;
+    height: 95px;
+    background: radial-gradient(ellipse, rgba(140,220,60,0.28) 0%, transparent 70%);
+    filter: blur(18px);
+  }
+
+  /* ---- estrelas ---- */
+  .star {
+    position: absolute;
+    border-radius: 50%;
+    background: #fff;
+    z-index: 1;
+    animation: twinkle 3s ease-in-out infinite;
+  }
+
+  @keyframes twinkle {
+    0%, 100% { opacity: 0.3; transform: scale(1); }
+    50%       { opacity: 1;   transform: scale(1.5); }
+  }
+
+  /* ---- conteúdo ---- */
+  .card-content {
+    position: relative;
+    z-index: 2;
+  }
+
+  .card-title {
+    font-family: 'Avenir Next', 'Avenir', 'Century Gothic', 'Trebuchet MS', sans-serif;
+    font-size: 32px;
+    font-weight: 700;
+    color: #ffffff;
+    letter-spacing: -0.3px;
+    line-height: 1.1;
+  }
+</style>
+</head>
+<body>
+
+<div class="card">
+  <div class="blob blob-main"></div>
+  <div class="blob blob-accent"></div>
+  <div class="star" style="width:3px;height:3px;top:20px;right:46px;animation-delay:0s;"></div>
+  <div class="star" style="width:2px;height:2px;top:48px;right:84px;animation-delay:1.1s;"></div>
+  <div class="star" style="width:2px;height:2px;top:34px;right:120px;animation-delay:0.5s;"></div>
+  <div class="card-content">
+    <h1 class="card-title">Rodovias</h1>
+  </div>
+</div>
+
+</body>
+</html>

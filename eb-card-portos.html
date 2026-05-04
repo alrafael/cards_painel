@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Card Portos</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Avenir Next', 'Avenir', 'Century Gothic', 'Trebuchet MS', sans-serif;
+  }
+
+  .card {
+    position: relative;
+    width: 320px;
+    height: 200px;
+    border-radius: 20px;
+    overflow: hidden;
+    padding: 28px 28px 24px;
+    border: 1px solid rgba(255,255,255,0.07);
+    background: #06101a;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    cursor: default;
+    transition: transform 0.3s ease, border-color 0.3s ease;
+  }
+
+  .card:hover {
+    transform: translateY(-4px) scale(1.01);
+    border-color: rgba(255,255,255,0.14);
+  }
+
+  .blob {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .blob-main {
+    bottom: -40px;
+    right: -28px;
+    width: 245px;
+    height: 205px;
+    background: radial-gradient(ellipse, rgba(0,104,176,0.82) 0%, rgba(0,104,176,0.26) 42%, transparent 70%);
+    filter: blur(28px);
+  }
+
+  .blob-accent {
+    top: 0px;
+    right: 65px;
+    width: 125px;
+    height: 100px;
+    background: radial-gradient(ellipse, rgba(40,160,255,0.28) 0%, transparent 70%);
+    filter: blur(18px);
+  }
+
+  .star {
+    position: absolute;
+    border-radius: 50%;
+    background: #fff;
+    z-index: 1;
+    animation: twinkle 3s ease-in-out infinite;
+  }
+
+  @keyframes twinkle {
+    0%, 100% { opacity: 0.3; transform: scale(1); }
+    50%       { opacity: 1;   transform: scale(1.5); }
+  }
+
+  .card-content {
+    position: relative;
+    z-index: 2;
+  }
+
+  .card-title {
+    font-family: 'Avenir Next', 'Avenir', 'Century Gothic', 'Trebuchet MS', sans-serif;
+    font-size: 32px;
+    font-weight: 700;
+    color: #ffffff;
+    letter-spacing: -0.3px;
+    line-height: 1.1;
+  }
+</style>
+</head>
+<body>
+
+<div class="card">
+  <div class="blob blob-main"></div>
+  <div class="blob blob-accent"></div>
+  <div class="star" style="width:3px;height:3px;top:20px;right:48px;animation-delay:0.6s;"></div>
+  <div class="star" style="width:2px;height:2px;top:46px;right:88px;animation-delay:1.7s;"></div>
+  <div class="star" style="width:2px;height:2px;top:32px;right:118px;animation-delay:0.2s;"></div>
+  <div class="card-content">
+    <h1 class="card-title">Portos</h1>
+  </div>
+</div>
+
+</body>
+</html>
