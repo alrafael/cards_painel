@@ -29,7 +29,7 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    padding: clamp(16px, 4vh, 28px) clamp(16px, 4vw, 28px) clamp(18px, 4.5vh, 32px);
+    padding: clamp(18px, 5vh, 36px) clamp(18px, 5vw, 32px) clamp(20px, 5.5vh, 40px);
     border: 1px solid rgba(0, 104, 176, 0.14);
   }
 
@@ -60,61 +60,52 @@
     pointer-events: none;
   }
 
-  /* linha divisória sutil */
-  .divider {
-    position: absolute;
-    bottom: clamp(72px, 22vh, 110px);
-    left: clamp(16px, 4vw, 28px);
-    right: clamp(16px, 4vw, 28px);
-    height: 0.5px;
-    background: rgba(255,255,255,0.06);
-    z-index: 2;
-  }
+
 
   .top, .bottom {
     position: relative;
     z-index: 3;
   }
 
-  /* ── LABEL — Calibri ── */
+  /* ── LABEL — Calibri, discreto ── */
   .modal-label {
     font-family: 'Calibri', 'Gill Sans', 'Gill Sans MT', 'Trebuchet MS', sans-serif;
-    font-size: clamp(13px, 2.2vh, 20px);
+    font-size: clamp(11px, 2vh, 18px);
     font-weight: 700;
-    letter-spacing: 0.20em;
+    letter-spacing: 0.18em;
     text-transform: uppercase;
-    color: rgba(140, 200, 255, 0.52);
+    color: rgba(140, 200, 255, 0.55);
   }
 
-  /* ── NÚMERO — Avenir Next ── */
+  /* ── NÚMERO — Avenir Next, muito grande ── */
   .number {
     font-family: 'Avenir Next', 'Avenir', 'Century Gothic', 'Trebuchet MS', sans-serif;
-    font-size: clamp(56px, 14vh, 110px);
+    font-size: clamp(72px, 22vh, 180px);
     font-weight: 800;
     color: #ffffff;
-    line-height: 0.86;
+    line-height: 0.85;
     letter-spacing: -0.05em;
   }
 
   .number .unit {
     font-family: 'Avenir Next', 'Avenir', 'Century Gothic', 'Trebuchet MS', sans-serif;
-    font-size: clamp(24px, 5.5vh, 46px);
+    font-size: clamp(30px, 8vh, 72px);
     font-weight: 600;
     letter-spacing: -0.02em;
     vertical-align: super;
     line-height: 0;
-    color: rgba(255, 255, 255, 0.80);
+    color: rgba(255, 255, 255, 0.78);
   }
 
-  /* ── DESCRIÇÃO — Avenir Next ── */
+  /* ── DESCRIÇÃO — Avenir Next, destaque secundário ── */
   .desc {
     font-family: 'Avenir Next', 'Avenir', 'Century Gothic', 'Trebuchet MS', sans-serif;
-    font-size: clamp(11px, 1.8vh, 16px);
+    font-size: clamp(16px, 4vh, 32px);
     font-weight: 400;
-    color: rgba(255, 255, 255, 0.32);
-    line-height: 1.60;
-    margin-top: clamp(8px, 2vh, 16px);
-    max-width: 60%;
+    color: rgba(255, 255, 255, 0.55);
+    line-height: 1.40;
+    margin-top: clamp(10px, 2.5vh, 20px);
+    max-width: 85%;
   }
 </style>
 </head>
@@ -122,8 +113,6 @@
 
 <div class="card">
   <div class="glow"></div>
-  <div class="divider"></div>
-
   <div class="top">
     <span class="modal-label">Portos</span>
   </div>
