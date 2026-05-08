@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -24,13 +23,29 @@
       height: 100%;
       object-fit: cover;
       display: block;
-      pointer-events: none; /* impede o usuário de interagir com o vídeo */
+      pointer-events: none;
     }
   </style>
 </head>
 <body>
-  <video autoplay loop muted playsinline>
+  <video id="heroVideo" autoplay loop muted playsinline preload="auto">
     <source src="hero.mp4" type="video/mp4">
   </video>
+
+  <script>
+    const video = document.getElementById('heroVideo');
+
+    // Garante que está mutado (requisito do autoplay em iframe)
+    video.muted = true;
+
+    // Tenta dar play assim que a página carrega
+    window.addEventListener('load', () => {
+      video.play().catch(() => {
+        // Se falhar, tenta novamente no primeiro clique/toque do usuário
+        document.addEventListener('click', () => video.play(), { once: true });
+        document.addEventListener('touchstart', () => video.play(), { once: true });
+      });
+    });
+  </script>
 </body>
 </html>
