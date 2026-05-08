@@ -5,19 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Atlas Hero</title>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    html, body {
-      width: 100%;
-      height: 100%;
-      background: transparent;
-      overflow: hidden;
-    }
-
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { width: 100%; height: 100%; background: transparent; overflow: hidden; }
     video {
       width: 100%;
       height: 100%;
@@ -34,18 +23,38 @@
 
   <script>
     const video = document.getElementById('heroVideo');
-
-    // Garante que está mutado (requisito do autoplay em iframe)
     video.muted = true;
+    video.volume = 0;
 
-    // Tenta dar play assim que a página carrega
-    window.addEventListener('load', () => {
-      video.play().catch(() => {
-        // Se falhar, tenta novamente no primeiro clique/toque do usuário
-        document.addEventListener('click', () => video.play(), { once: true });
-        document.addEventListener('touchstart', () => video.play(), { once: true });
-      });
+    // Tenta imediatamente ao parsear o script
+    video.play();
+
+    // Tenta novamente no DOMContentLoaded
+    document.addEventListener('DOMContentLoaded', () => {
+      video.play();
     });
+
+    // Tenta novamente quando a janela carrega
+    window.addEventListener('load', () => {
+      video.play();
+    });
+
+    // Tenta quando o vídeo estiver pronto para tocar
+    video.addEventListener('canplay', () => {
+      video.play();
+    });
+
+    // Tenta via Intersection Observer (quando o elemento fica visível)
+    if ('IntersectionObserver' in window) {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            video.play();
+          }
+        });
+      }, { threshold: 0.1 });
+      observer.observe(video);
+    }
   </script>
 </body>
 </html>
