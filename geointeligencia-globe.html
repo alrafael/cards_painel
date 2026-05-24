@@ -8,20 +8,29 @@
 <style>
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
-body {
+html, body {
+  width: 100%; height: 100%;
   background: #00111f;
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: 'Rajdhani', 'Arial Narrow', Arial, sans-serif;
   overflow: hidden;
 }
 
+/* Full-viewport centering wrapper */
+#viewport {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* The scene stays at 680×680 internally — JS scales it to fit */
 .scene {
   position: relative;
   width: 680px;
   height: 680px;
+  /* transform-origin + scale injected by JS */
+  transform-origin: center center;
+  flex-shrink: 0;
 }
 
 #bg-canvas {
@@ -56,6 +65,7 @@ body {
   position: absolute;
   transform: translate(-50%, -50%);
   text-align: center;
+  font-family: 'Rajdhani', 'Arial Narrow', Arial, sans-serif;
 }
 
 .glabel .l1 {
@@ -84,6 +94,7 @@ body {
   top: 50%; left: 50%;
   transform: translate(-50%, -50%);
   color: #ffffff;
+  font-family: 'Rajdhani', 'Arial Narrow', Arial, sans-serif;
   font-size: 17px;
   font-weight: 700;
   letter-spacing: 3.5px;
@@ -100,44 +111,57 @@ body {
 </style>
 </head>
 <body>
-<div class="scene">
-  <canvas id="bg-canvas" width="680" height="680"></canvas>
-  <canvas id="globe-canvas" width="268" height="268"></canvas>
+<div id="viewport">
+  <div class="scene">
+    <canvas id="bg-canvas" width="680" height="680"></canvas>
+    <canvas id="globe-canvas" width="268" height="268"></canvas>
 
-  <svg id="orbit-svg" viewBox="0 0 680 680" xmlns="http://www.w3.org/2000/svg">
-    <defs>
-      <!-- Green glow filter for dots -->
-      <filter id="fg" x="-70%" y="-70%" width="240%" height="240%">
-        <feGaussianBlur in="SourceGraphic" stdDeviation="6" result="b"/>
-        <feMerge>
-          <feMergeNode in="b"/>
-          <feMergeNode in="SourceGraphic"/>
-        </feMerge>
-      </filter>
-      <!-- Subtle blue glow for center -->
-      <filter id="fb" x="-100%" y="-100%" width="300%" height="300%">
-        <feGaussianBlur in="SourceGraphic" stdDeviation="10"/>
-      </filter>
-    </defs>
-    <g id="og"></g>
-  </svg>
+    <svg id="orbit-svg" viewBox="0 0 680 680" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <filter id="fg" x="-70%" y="-70%" width="240%" height="240%">
+          <feGaussianBlur in="SourceGraphic" stdDeviation="6" result="b"/>
+          <feMerge>
+            <feMergeNode in="b"/>
+            <feMergeNode in="SourceGraphic"/>
+          </feMerge>
+        </filter>
+        <filter id="fb" x="-100%" y="-100%" width="300%" height="300%">
+          <feGaussianBlur in="SourceGraphic" stdDeviation="10"/>
+        </filter>
+      </defs>
+      <g id="og"></g>
+    </svg>
 
-  <div id="label-layer"></div>
-  <div id="geo-text">Geointeligência</div>
+    <div id="label-layer"></div>
+    <div id="geo-text">Geointeligência</div>
+  </div>
 </div>
 
 <script>
-// ─── CONSTANTS ────────────────────────────────────────────────────────────────
-const W = 680, H = 680;         // scene size
-const CX = 340, CY = 340;       // scene center
-const OR = 212;                  // orbit ring radius (px)
-const LR = 258;                  // label text radius (px)
-const GW = 268, GH = 268;        // globe canvas size
-const GCX = GW / 2, GCY = GH / 2;
-const R = 118;                   // globe sphere radius (canvas px)
+// ─── RESPONSIVE SCALE ────────────────────────────────────────────────────────
+const SCENE_SIZE = 680;
+const scene = document.querySelector('.scene');
 
-// Globe center in scene coords is (340, 340) — same as CX, CY
-// Canvas pixels map 1:1 to scene pixels (no CSS scaling), so R=118 scene px
+function applyScale() {
+  const vw = window.innerWidth;
+  const vh = window.innerHeight;
+  // Use 94% of the smaller dimension so it never clips
+  const fit = Math.min(vw, vh) * 0.94;
+  const s   = Math.min(fit / SCENE_SIZE, 1);   // never upscale beyond 1×
+  scene.style.transform = `scale(${s})`;
+}
+
+applyScale();
+window.addEventListener('resize', applyScale);
+
+// ─── CONSTANTS ────────────────────────────────────────────────────────────────
+const W = 680, H = 680;
+const CX = 340, CY = 340;
+const OR = 212;    // orbit ring radius
+const LR = 258;    // label text radius
+const GW = 268, GH = 268;
+const GCX = GW / 2, GCY = GH / 2;
+const R = 118;     // globe sphere radius
 
 // ─── STARS ────────────────────────────────────────────────────────────────────
 const bgCanvas = document.getElementById('bg-canvas');
@@ -166,7 +190,6 @@ function drawBg(t) {
 const globeCanvas = document.getElementById('globe-canvas');
 const gx = globeCanvas.getContext('2d');
 
-// Seeded random node positions on sphere surface
 const rng = (() => { let s = 42; return () => { s = (s * 16807) % 2147483647; return (s - 1) / 2147483646; }; })();
 const NODES = Array.from({ length: 26 }, () => ({
   lat: (rng() - 0.5) * Math.PI * 0.85,
@@ -177,34 +200,28 @@ function proj(lat, lon) {
   return {
     x: GCX + R * Math.cos(lat) * Math.sin(lon),
     y: GCY - R * Math.sin(lat),
-    z: Math.cos(lat) * Math.cos(lon)   // depth: +1=front, -1=back
+    z: Math.cos(lat) * Math.cos(lon)
   };
 }
 
 function drawGlobe(rot) {
   gx.clearRect(0, 0, GW, GH);
 
-  // ── Atmosphere glow ──
   const atm = gx.createRadialGradient(GCX, GCY, R - 4, GCX, GCY, R + 28);
-  atm.addColorStop(0, 'rgba(10, 70, 200, .55)');
-  atm.addColorStop(0.45, 'rgba(5, 35, 100, .22)');
+  atm.addColorStop(0, 'rgba(10,70,200,.55)');
+  atm.addColorStop(0.45, 'rgba(5,35,100,.22)');
   atm.addColorStop(1, 'rgba(0,0,0,0)');
   gx.beginPath(); gx.arc(GCX, GCY, R + 28, 0, Math.PI * 2);
   gx.fillStyle = atm; gx.fill();
 
-  // ── Clip to sphere ──
   gx.save();
   gx.beginPath(); gx.arc(GCX, GCY, R, 0, Math.PI * 2); gx.clip();
 
-  // ── Base sphere gradient ──
   const sg = gx.createRadialGradient(GCX - 34, GCY - 26, 4, GCX, GCY, R);
-  sg.addColorStop(0,    '#005ab8');
-  sg.addColorStop(0.28, '#003070');
-  sg.addColorStop(0.65, '#001544');
-  sg.addColorStop(1,    '#00091e');
+  sg.addColorStop(0, '#005ab8'); sg.addColorStop(0.28, '#003070');
+  sg.addColorStop(0.65, '#001544'); sg.addColorStop(1, '#00091e');
   gx.fillStyle = sg; gx.fillRect(0, 0, GW, GH);
 
-  // ── Latitude parallels ──
   [-60, -40, -20, 0, 20, 40, 60].forEach(deg => {
     const lat = deg * Math.PI / 180;
     const yL = GCY - R * Math.sin(lat);
@@ -215,10 +232,9 @@ function drawGlobe(rot) {
     gx.lineWidth = 0.55; gx.stroke();
   });
 
-  // ── Longitude meridians (rotating) ──
   for (let i = 0; i < 12; i++) {
     const lon = (i / 12) * Math.PI * 2 + rot;
-    const vis = (1 + Math.cos(lon)) / 2;   // 0=back, 1=front
+    const vis = (1 + Math.cos(lon)) / 2;
     const pts = [];
     for (let j = 0; j <= 46; j++) {
       pts.push(proj(-Math.PI / 2 + (j / 46) * Math.PI, lon));
@@ -229,10 +245,8 @@ function drawGlobe(rot) {
     gx.lineWidth = 0.55; gx.stroke();
   }
 
-  // ── Network nodes — compute visible ──
   const vis = NODES.map(n => proj(n.lat, n.lon + rot)).filter(p => p.z > 0.05);
 
-  // Connections between nearby nodes
   for (let i = 0; i < vis.length; i++) {
     for (let j = i + 1; j < vis.length; j++) {
       const d = Math.hypot(vis[i].x - vis[j].x, vis[i].y - vis[j].y);
@@ -247,38 +261,32 @@ function drawGlobe(rot) {
     }
   }
 
-  // Node dots with glow
   vis.forEach(p => {
     const sz = 1.4 + p.z * 2.8;
     const a  = 0.48 + p.z * 0.52;
-    // Halo
     const gw = gx.createRadialGradient(p.x, p.y, 0, p.x, p.y, sz * 5.5);
     gw.addColorStop(0, `rgba(130,190,80,${a * 0.48})`);
     gw.addColorStop(1, 'rgba(130,190,80,0)');
     gx.beginPath(); gx.arc(p.x, p.y, sz * 5.5, 0, Math.PI * 2);
     gx.fillStyle = gw; gx.fill();
-    // Core
     gx.beginPath(); gx.arc(p.x, p.y, sz, 0, Math.PI * 2);
     gx.fillStyle = `rgba(158,224,96,${a})`; gx.fill();
   });
 
-  // ── Specular highlight ──
   const sp = gx.createRadialGradient(GCX - 38, GCY - 30, 2, GCX - 14, GCY - 8, 68);
   sp.addColorStop(0, 'rgba(165,215,255,.14)');
   sp.addColorStop(1, 'rgba(165,215,255,0)');
   gx.fillStyle = sp; gx.fillRect(0, 0, GW, GH);
-
   gx.restore();
 
-  // ── Thin outer ring rim ──
   gx.beginPath(); gx.arc(GCX, GCY, R, 0, Math.PI * 2);
   gx.strokeStyle = 'rgba(80,140,255,.25)';
   gx.lineWidth = 1; gx.stroke();
 }
 
 // ─── ORBIT RING + LABEL NODES ─────────────────────────────────────────────────
-const og  = document.getElementById('og');
-const ll  = document.getElementById('label-layer');
+const og = document.getElementById('og');
+const ll = document.getElementById('label-layer');
 
 function sEl(tag, attrs) {
   const el = document.createElementNS('http://www.w3.org/2000/svg', tag);
@@ -286,32 +294,23 @@ function sEl(tag, attrs) {
   return el;
 }
 
-// Outer dashed orbit ring
 og.appendChild(sEl('circle', {
   cx: CX, cy: CY, r: OR,
-  fill: 'none',
-  stroke: 'rgba(130,190,80,.2)',
-  'stroke-width': '1',
-  'stroke-dasharray': '5 4'
+  fill: 'none', stroke: 'rgba(130,190,80,.2)',
+  'stroke-width': '1', 'stroke-dasharray': '5 4'
 }));
 
-// Inner companion ring (subtle)
 og.appendChild(sEl('circle', {
   cx: CX, cy: CY, r: OR - 18,
-  fill: 'none',
-  stroke: 'rgba(0,70,130,.3)',
-  'stroke-width': '0.5',
-  'stroke-dasharray': '2 6'
+  fill: 'none', stroke: 'rgba(0,70,130,.3)',
+  'stroke-width': '0.5', 'stroke-dasharray': '2 6'
 }));
 
-// Blue ambient glow behind globe
 og.appendChild(sEl('circle', {
   cx: CX, cy: CY, r: 148,
-  fill: 'rgba(0,55,150,.12)',
-  filter: 'url(#fb)'
+  fill: 'rgba(0,55,150,.12)', filter: 'url(#fb)'
 }));
 
-// Label nodes data: angle in degrees from top, clockwise
 const LABELS = [
   { a: -6,  l1: 'Método',         l2: null },
   { a: 50,  l1: 'Engenharia',     l2: 'de Dados' },
@@ -326,70 +325,43 @@ LABELS.forEach((lbl, idx) => {
   const dy   = -Math.cos(rad);
   const dotX = CX + OR * dx;
   const dotY = CY + OR * dy;
+  const edgeDist = R + 16;
 
-  // Connector line from globe atmosphere edge → dot
-  const edgeDist = R + 16;    // canvas globe R + atmosphere offset
   og.appendChild(sEl('line', {
-    x1: CX + edgeDist * dx,
-    y1: CY + edgeDist * dy,
+    x1: CX + edgeDist * dx, y1: CY + edgeDist * dy,
     x2: dotX, y2: dotY,
-    stroke: 'rgba(130,190,80,.14)',
-    'stroke-width': '.8',
-    'stroke-dasharray': '3 3.5'
+    stroke: 'rgba(130,190,80,.14)', 'stroke-width': '.8', 'stroke-dasharray': '3 3.5'
   }));
 
-  // Outer halo ring
   og.appendChild(sEl('circle', {
     cx: dotX, cy: dotY, r: 16,
-    fill: 'none',
-    stroke: 'rgba(130,190,80,.16)',
-    'stroke-width': '1'
+    fill: 'none', stroke: 'rgba(130,190,80,.16)', 'stroke-width': '1'
   }));
 
-  // Animated pulse ring
   const pc = sEl('circle', {
     cx: dotX, cy: dotY, r: 10,
-    fill: 'none',
-    stroke: 'rgba(130,190,80,.55)',
-    'stroke-width': '1'
+    fill: 'none', stroke: 'rgba(130,190,80,.55)', 'stroke-width': '1'
   });
   pc.appendChild(sEl('animate', {
-    attributeName: 'r',
-    values: '10;24;10',
-    dur: `${2.0 + idx * 0.5}s`,
-    repeatCount: 'indefinite'
+    attributeName: 'r', values: '10;24;10',
+    dur: `${2.0 + idx * 0.5}s`, repeatCount: 'indefinite'
   }));
   pc.appendChild(sEl('animate', {
-    attributeName: 'opacity',
-    values: '.65;0;.65',
-    dur: `${2.0 + idx * 0.5}s`,
-    repeatCount: 'indefinite'
+    attributeName: 'opacity', values: '.65;0;.65',
+    dur: `${2.0 + idx * 0.5}s`, repeatCount: 'indefinite'
   }));
   og.appendChild(pc);
 
-  // Glow halo (blurred circle behind dot)
   og.appendChild(sEl('circle', {
     cx: dotX, cy: dotY, r: 12,
-    fill: 'rgba(130,190,80,.32)',
-    filter: 'url(#fg)'
+    fill: 'rgba(130,190,80,.32)', filter: 'url(#fg)'
   }));
 
-  // Main dot
-  og.appendChild(sEl('circle', {
-    cx: dotX, cy: dotY, r: 8,
-    fill: '#82BE50'
-  }));
+  og.appendChild(sEl('circle', { cx: dotX, cy: dotY, r: 8, fill: '#82BE50' }));
+  og.appendChild(sEl('circle', { cx: dotX - 2.5, cy: dotY - 2.5, r: 2.5, fill: 'rgba(255,255,255,.65)' }));
 
-  // Inner white highlight
-  og.appendChild(sEl('circle', {
-    cx: dotX - 2.5, cy: dotY - 2.5, r: 2.5,
-    fill: 'rgba(255,255,255,.65)'
-  }));
-
-  // Label HTML div (positioned outside orbit ring)
   const lx  = CX + LR * dx;
   const ly  = CY + LR * dy;
-
   const div = document.createElement('div');
   div.className = 'glabel';
   div.style.left = lx + 'px';
